@@ -7,6 +7,7 @@ import com.example.finalproject.repository.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -19,7 +20,7 @@ public class IAdminServiceImpl implements IAdminService {
     private AdminMapper adminMapper;
 
     @Override
-    public AdminDTO signUp(AdminDTO adminDTO) {
+    public AdminDTO submit(AdminDTO adminDTO) {
         if (adminRepository.findByUsername(adminDTO.getUsername()).isEmpty()) {
             return adminMapper.toDTO(adminRepository.save(adminMapper.toEntity(adminDTO)));
         }
@@ -36,7 +37,10 @@ public class IAdminServiceImpl implements IAdminService {
         }
         //TODO check password
         return adminMapper.toDTO(admin);
+    }
 
-
+    @Override
+    public List<AdminDTO> getAdmins() {
+        return adminRepository.findAll().stream().map(admin -> adminMapper.toDTO(admin)).toList();
     }
 }

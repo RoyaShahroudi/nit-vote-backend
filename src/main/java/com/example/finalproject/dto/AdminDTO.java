@@ -17,6 +17,7 @@ public class AdminDTO {
 
     @JsonIgnore
     private Integer id;
+
     @NotNull
     private String username;
 
