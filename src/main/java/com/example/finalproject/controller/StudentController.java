@@ -22,4 +22,9 @@ public class StudentController {
     public ResponseEntity<StudentDTO> login(@RequestBody @Valid StudentDTO student) {
         return new ResponseEntity<>(studentService.login(student), HttpStatus.OK);
     }
+
+    @PostMapping("/register")
+    public ResponseEntity<StudentDTO> register(@RequestBody @Valid StudentDTO student) {
+        return new ResponseEntity<>(studentService.register(student), HttpStatus.CREATED);
+    }
 }
