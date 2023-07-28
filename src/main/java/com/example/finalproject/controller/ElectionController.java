@@ -1,6 +1,7 @@
 package com.example.finalproject.controller;
 
 import com.example.finalproject.dto.ElectionDTO;
+import com.example.finalproject.dto.ElectionResult;
 import com.example.finalproject.service.IElectionService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class ElectionController {
     }
 
     @GetMapping("/result/{electionId}")
-    public ResponseEntity<ElectionDTO> getElectionResult(@PathVariable Integer electionId) {
+    public ResponseEntity<ElectionResult> getElectionResult(@PathVariable Integer electionId) {
         return new ResponseEntity<>(electionService.getElectionResult(electionId), HttpStatus.OK);
     }
 

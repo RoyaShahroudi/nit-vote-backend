@@ -1,6 +1,7 @@
 package com.example.finalproject.service;
 
 import com.example.finalproject.dto.ElectionDTO;
+import com.example.finalproject.dto.ElectionResult;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public interface IElectionService {
 
     List<ElectionDTO> getElections();
 
-    ElectionDTO getElectionResult(Integer electionId);
+    ElectionResult getElectionResult(Integer electionId);
 
     ElectionDTO newElection(ElectionDTO electionDTO);
 }
