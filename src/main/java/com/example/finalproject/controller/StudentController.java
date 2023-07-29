@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,5 +38,10 @@ public class StudentController {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(HttpHeaders.AUTHORIZATION, jwtUtil.generateAccessToken(student));
         return new ResponseEntity<>(student, httpHeaders, HttpStatus.CREATED);
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<StudentDTO> profile() {
+        return new ResponseEntity<>(studentService.profile(), HttpStatus.OK);
     }
 }
