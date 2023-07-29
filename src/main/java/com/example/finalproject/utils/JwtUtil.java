@@ -1,5 +1,6 @@
 package com.example.finalproject.utils;
 
+import com.example.finalproject.dto.AdminDTO;
 import com.example.finalproject.dto.StudentDTO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -15,7 +16,17 @@ public class JwtUtil {
 
     public String generateAccessToken(StudentDTO studentDTO) {
         return Jwts.builder()
-                .setSubject(String.valueOf(studentDTO.getStudentNumber()))
+                .setSubject(studentDTO.getStudentNumber() + ",STUDENT")
+                .setIssuer("CodeJava")
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRE_DURATION))
+                .signWith(SignatureAlgorithm.HS512, "SECRET_KEY")
+                .compact();
+    }
+
+    public String generateAccessToken(AdminDTO adminDTO) {
+        return Jwts.builder()
+                .setSubject(adminDTO.getUsername() + ",ADMIN")
                 .setIssuer("CodeJava")
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRE_DURATION))
