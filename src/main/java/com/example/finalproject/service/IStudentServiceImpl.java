@@ -7,6 +7,7 @@ import com.example.finalproject.exceptions.messages.StudentNotFoundException;
 import com.example.finalproject.mapper.StudentMapper;
 import com.example.finalproject.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
@@ -31,6 +32,7 @@ public class IStudentServiceImpl implements IStudentService {
     @Override
     public StudentDTO register(StudentDTO studentDTO) {
         Student student = studentRepository.findByStudentNumber(studentDTO.getStudentNumber()).orElse(null);
+        studentDTO.setRole("STUDENT_ROLE");
         if (Objects.isNull(student)) {
             return studentMapper.toDTO(studentRepository.save(studentMapper.toEntity(studentDTO)));
         }
@@ -39,6 +41,7 @@ public class IStudentServiceImpl implements IStudentService {
 
     @Override
     public StudentDTO profile() {
-        return null;
+
+        return studentMapper.toDTO(studentRepository.findByStudentNumber(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()).orElseThrow(StudentNotFoundException::new));
     }
 }

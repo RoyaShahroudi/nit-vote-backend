@@ -19,4 +19,8 @@ public class StudentDTO {
 
     @NotNull
     private String studentNumber;
+
+    private String password;
+
+    private String role;
 }

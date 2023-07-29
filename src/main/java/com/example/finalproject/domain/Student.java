@@ -22,4 +22,8 @@ public class Student {
 
     @Column(name = "student_number")
     private String studentNumber;
+
+    private String password;
+
+    private String role;
 }

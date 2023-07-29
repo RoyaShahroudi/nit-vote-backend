@@ -12,14 +12,18 @@ public class StudentMapper {
         if (Objects.isNull(studentDTO)) return null;
         return new Student()
                 .setId(studentDTO.getId())
-                .setStudentNumber(studentDTO.getStudentNumber());
+                .setStudentNumber(studentDTO.getStudentNumber())
+                .setPassword(studentDTO.getPassword())
+                .setRole(studentDTO.getRole());
     }
 
     public StudentDTO toDTO(Student student) {
         if (Objects.isNull(student)) return null;
         return new StudentDTO()
                 .setId(student.getId())
-                .setStudentNumber(student.getStudentNumber());
+                .setStudentNumber(student.getStudentNumber())
+                .setPassword(student.getPassword())
+                .setRole(student.getRole());
     }
 
 }
