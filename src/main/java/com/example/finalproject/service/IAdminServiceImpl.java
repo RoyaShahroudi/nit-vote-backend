@@ -2,9 +2,12 @@ package com.example.finalproject.service;
 
 import com.example.finalproject.domain.Admin;
 import com.example.finalproject.dto.AdminDTO;
+import com.example.finalproject.exceptions.messages.AdminDuplicateException;
+import com.example.finalproject.exceptions.messages.AdminNotFoundException;
 import com.example.finalproject.mapper.AdminMapper;
 import com.example.finalproject.repository.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,19 +24,18 @@ public class IAdminServiceImpl implements IAdminService {
 
     @Override
     public AdminDTO submit(AdminDTO adminDTO) {
+        adminDTO.setRole("ADMIN_ROLE");
         if (adminRepository.findByUsername(adminDTO.getUsername()).isEmpty()) {
             return adminMapper.toDTO(adminRepository.save(adminMapper.toEntity(adminDTO)));
         }
-        //TODO throw exception
-        return null;
+        throw new AdminDuplicateException();
     }
 
     @Override
     public AdminDTO login(AdminDTO adminDTO) {
         Admin admin = adminRepository.findByUsername(adminDTO.getUsername()).orElse(null);
         if (Objects.isNull(admin)) {
-            //TODO throw exception
-            return null;
+            throw new AdminNotFoundException();
         }
         //TODO check password
         return adminMapper.toDTO(admin);
@@ -42,5 +44,10 @@ public class IAdminServiceImpl implements IAdminService {
     @Override
     public List<AdminDTO> getAdmins() {
         return adminRepository.findAll().stream().map(admin -> adminMapper.toDTO(admin)).toList();
+    }
+
+    @Override
+    public AdminDTO profile() {
+        return adminMapper.toDTO(adminRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()).orElseThrow(AdminNotFoundException::new));
     }
 }

@@ -2,8 +2,10 @@ package com.example.finalproject.controller;
 
 import com.example.finalproject.dto.AdminDTO;
 import com.example.finalproject.service.IAdminService;
+import com.example.finalproject.utils.JwtUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -21,18 +23,33 @@ public class AdminController {
     @Autowired
     private IAdminService adminService;
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @PostMapping("/submit")
     public ResponseEntity<AdminDTO> submit(@RequestBody @Valid AdminDTO adminDTO) {
-        return new ResponseEntity<>(adminService.submit(adminDTO), HttpStatus.CREATED);
+        AdminDTO admin =  adminService.submit(adminDTO);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(HttpHeaders.AUTHORIZATION, jwtUtil.generateAccessToken(admin));
+        return new ResponseEntity<>(admin, httpHeaders, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
     public ResponseEntity<AdminDTO> login(@RequestBody @Valid AdminDTO adminDTO) {
-        return new ResponseEntity<>(adminService.login(adminDTO), HttpStatus.OK);
+        AdminDTO admin =  adminService.login(adminDTO);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.add(HttpHeaders.AUTHORIZATION, jwtUtil.generateAccessToken(admin));
+        return new ResponseEntity<>(admin, httpHeaders, HttpStatus.OK);
     }
 
     @GetMapping("/")
     public ResponseEntity<List<AdminDTO>> getAdmins() {
         return new ResponseEntity<>(adminService.getAdmins(), HttpStatus.OK);
+    }
+
+    @GetMapping("/profile")
+    public ResponseEntity<AdminDTO> profile() {
+        return new ResponseEntity<>(adminService.profile(), HttpStatus.OK);
+
     }
 }

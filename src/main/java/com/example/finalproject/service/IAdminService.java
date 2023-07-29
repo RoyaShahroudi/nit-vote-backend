@@ -10,5 +10,7 @@ public interface IAdminService {
     AdminDTO login(AdminDTO adminDTO);
 
     List<AdminDTO> getAdmins();
+
+    AdminDTO profile();
 }
 
