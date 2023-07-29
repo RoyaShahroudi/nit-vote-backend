@@ -13,7 +13,8 @@ public class AdminMapper {
         return new Admin()
                 .setId(adminDTO.getId())
                 .setUsername(adminDTO.getUsername())
-                .setPassword(adminDTO.getPassword());
+                .setPassword(adminDTO.getPassword())
+                .setRole(adminDTO.getRole());
     }
 
     public AdminDTO toDTO(Admin admin) {
@@ -21,7 +22,8 @@ public class AdminMapper {
         return new AdminDTO()
                 .setId(admin.getId())
                 .setUsername(admin.getUsername())
-                .setPassword(admin.getPassword());
+                .setPassword(admin.getPassword())
+                .setRole(admin.getRole());
     }
 
 }
