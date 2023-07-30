@@ -41,7 +41,8 @@ public class IStudentServiceImpl implements IStudentService {
 
     @Override
     public StudentDTO profile() {
-
-        return studentMapper.toDTO(studentRepository.findByStudentNumber(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()).orElseThrow(StudentNotFoundException::new));
+        return studentMapper.toDTO(studentRepository
+                .findByStudentNumber(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())
+                .orElseThrow(StudentNotFoundException::new));
     }
 }

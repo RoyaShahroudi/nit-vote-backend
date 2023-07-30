@@ -48,6 +48,8 @@ public class IAdminServiceImpl implements IAdminService {
 
     @Override
     public AdminDTO profile() {
-        return adminMapper.toDTO(adminRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString()).orElseThrow(AdminNotFoundException::new));
+        return adminMapper.toDTO(adminRepository
+                .findByUsername(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())
+                .orElseThrow(AdminNotFoundException::new));
     }
 }
