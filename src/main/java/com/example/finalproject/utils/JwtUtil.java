@@ -40,7 +40,7 @@ public class JwtUtil {
         return !isTokenExpired;
     }
 
-    public String getStudentNumber(String token) {
+    public String getTokenContent(String token) {
         final Claims claims = Jwts.parser().setSigningKey("SECRET_KEY").parseClaimsJws(token).getBody();
         return claims.getSubject();
     }
