@@ -34,8 +34,13 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
     }
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String token = request.getHeader(HttpHeaders.AUTHORIZATION).substring(6);
 
+        String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if(Objects.isNull(token)) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+        token = token.substring(6);
         if (Objects.equals(jwtUtil.validateJwtToken(token), Boolean.TRUE)) {
             Student student = studentRepository.findByStudentNumber(jwtUtil.getStudentNumber(token)).orElseThrow(StudentNotFoundException::new);
             GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(student.getRole());
