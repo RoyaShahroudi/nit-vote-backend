@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
 @Entity
 public class Candidate {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy= GenerationType.TABLE)
     @Column(name = "id")
     private Integer id;
 
