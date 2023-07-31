@@ -24,7 +24,7 @@ public class IAdminServiceImpl implements IAdminService {
 
     @Override
     public AdminDTO submit(AdminDTO adminDTO) {
-        adminDTO.setRole("ADMIN_ROLE");
+        adminDTO.setRole("ROLE_ADMIN");
         if (adminRepository.findByUsername(adminDTO.getUsername()).isEmpty()) {
             return adminMapper.toDTO(adminRepository.save(adminMapper.toEntity(adminDTO)));
         }

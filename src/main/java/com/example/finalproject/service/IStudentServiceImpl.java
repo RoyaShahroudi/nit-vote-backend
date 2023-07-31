@@ -32,7 +32,7 @@ public class IStudentServiceImpl implements IStudentService {
     @Override
     public StudentDTO register(StudentDTO studentDTO) {
         Student student = studentRepository.findByStudentNumber(studentDTO.getStudentNumber()).orElse(null);
-        studentDTO.setRole("STUDENT_ROLE");
+        studentDTO.setRole("ROLE_STUDENT");
         if (Objects.isNull(student)) {
             return studentMapper.toDTO(studentRepository.save(studentMapper.toEntity(studentDTO)));
         }
