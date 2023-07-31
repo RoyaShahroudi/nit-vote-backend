@@ -1,5 +1,6 @@
 package com.example.finalproject.config;
 
+import jakarta.servlet.DispatcherType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -46,7 +47,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("/v1/student/register").permitAll()
                 .requestMatchers("/v1/student/login").permitAll()
-                .anyRequest().authenticated()
+                .requestMatchers("/v1/student/*").hasRole("STUDENT")
+                .requestMatchers("/v1/admin/submit").permitAll()
+                .requestMatchers("/v1/admin/login").permitAll()
+                .requestMatchers("/v1/admin/*").hasRole("ADMIN")
+                .requestMatchers("/v1/election/new").hasRole("ADMIN")
+                .dispatcherTypeMatchers( DispatcherType.ERROR ).permitAll()
                 .and()
                 .httpBasic()
                 .and()
