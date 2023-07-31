@@ -10,4 +10,6 @@ import java.util.List;
 @Repository
 public interface CandidateGroupRepository extends JpaRepository<CandidateGroup, Integer> {
     List<CandidateGroup> findAllByElectionId(int electionId);
+
+    List<CandidateGroup> findAllByElectionIdAndCandidateId(int electionId, int candidateId);
 }
