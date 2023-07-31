@@ -1,5 +1,6 @@
 package com.example.finalproject.service;
 
+import com.example.finalproject.dto.AddCandidateGroupRequestDTO;
 import com.example.finalproject.dto.ElectionDTO;
 import com.example.finalproject.dto.ElectionResult;
 
@@ -16,5 +17,7 @@ public interface IElectionService {
     ElectionResult getElectionResult(Integer electionId);
 
     ElectionDTO newElection(ElectionDTO electionDTO);
+
+    void addCandidateToElection(AddCandidateGroupRequestDTO addCandidateGroupRequestDTO);
 }
 

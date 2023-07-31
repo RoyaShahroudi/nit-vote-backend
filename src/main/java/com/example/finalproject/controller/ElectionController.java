@@ -1,5 +1,6 @@
 package com.example.finalproject.controller;
 
+import com.example.finalproject.dto.AddCandidateGroupRequestDTO;
 import com.example.finalproject.dto.ElectionDTO;
 import com.example.finalproject.dto.ElectionResult;
 import com.example.finalproject.service.IElectionService;
@@ -42,6 +43,12 @@ public class ElectionController {
     @PostMapping("/new")
     public ResponseEntity<ElectionDTO> newElection(@RequestBody @Valid ElectionDTO electionDTO) {
         return new ResponseEntity<>(electionService.newElection(electionDTO), HttpStatus.CREATED);
+    }
+
+    @PostMapping("/add-candidate-to-election")
+    public ResponseEntity<Void> addCandidateToElection(@RequestBody @Valid AddCandidateGroupRequestDTO candidateGroupDTO) {
+        electionService.addCandidateToElection(candidateGroupDTO);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
 }
