@@ -4,6 +4,7 @@ import com.example.finalproject.domain.Admin;
 import com.example.finalproject.dto.AdminDTO;
 import com.example.finalproject.exceptions.messages.AdminDuplicateException;
 import com.example.finalproject.exceptions.messages.AdminNotFoundException;
+import com.example.finalproject.exceptions.messages.WrongCredentialsException;
 import com.example.finalproject.mapper.AdminMapper;
 import com.example.finalproject.repository.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,11 +34,10 @@ public class IAdminServiceImpl implements IAdminService {
 
     @Override
     public AdminDTO login(AdminDTO adminDTO) {
-        Admin admin = adminRepository.findByUsername(adminDTO.getUsername()).orElse(null);
-        if (Objects.isNull(admin)) {
-            throw new AdminNotFoundException();
+        Admin admin = adminRepository.findByUsername(adminDTO.getUsername()).orElseThrow(AdminNotFoundException::new);
+        if(!Objects.equals(admin.getPassword(), adminDTO.getPassword())) {
+            throw new WrongCredentialsException();
         }
-        //TODO check password
         return adminMapper.toDTO(admin);
     }
 

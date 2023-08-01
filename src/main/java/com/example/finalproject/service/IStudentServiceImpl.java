@@ -4,7 +4,7 @@ import com.example.finalproject.domain.Student;
 import com.example.finalproject.dto.StudentDTO;
 import com.example.finalproject.exceptions.messages.StudentDuplicateException;
 import com.example.finalproject.exceptions.messages.StudentNotFoundException;
-import com.example.finalproject.exceptions.messages.StudentWrongCredentialsException;
+import com.example.finalproject.exceptions.messages.WrongCredentialsException;
 import com.example.finalproject.mapper.StudentMapper;
 import com.example.finalproject.repository.StudentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class IStudentServiceImpl implements IStudentService {
         Student student = studentRepository.findByStudentNumber(studentDTO.getStudentNumber())
                 .orElseThrow(StudentNotFoundException::new);
         if(!Objects.equals(student.getPassword(), studentDTO.getPassword())) {
-            throw new StudentWrongCredentialsException();
+            throw new WrongCredentialsException();
         }
         return studentMapper.toDTO(student);
     }
