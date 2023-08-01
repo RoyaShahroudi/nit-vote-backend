@@ -5,6 +5,7 @@ import com.example.finalproject.dto.StudentDTO;
 import com.example.finalproject.repository.StudentRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +41,13 @@ class StudentAuthenticationTest {
         studentRepository.deleteAll();
     }
 
+    @BeforeEach
+    public void beforeEach() {
+        studentRepository.deleteAll();
+    }
+
     @Test
-    public void studentRegister_Ok() throws Exception {
+    void studentRegister_Ok() throws Exception {
         StudentDTO studentDTO = new StudentDTO().setStudentNumber("1234").setPassword("1234");
         MvcResult result = mockMvc
                 .perform(post("/v1/student/register")
@@ -56,7 +62,7 @@ class StudentAuthenticationTest {
     }
 
     @Test
-    public void studentLogin_Ok() throws Exception {
+    void studentLogin_Ok() throws Exception {
         StudentDTO studentDTO = new StudentDTO().setStudentNumber("1234").setPassword("1234");
         studentRepository.save(new Student().setStudentNumber("1234").setPassword("1234"));
         MvcResult result = mockMvc
@@ -74,7 +80,7 @@ class StudentAuthenticationTest {
     }
 
     @Test
-    public void studentLogin_wrong_password() throws Exception {
+    void studentLogin_wrong_password() throws Exception {
         StudentDTO studentDTO = new StudentDTO().setStudentNumber("1234").setPassword("12345");
         studentRepository.save(new Student().setStudentNumber("1234").setPassword("1234"));
         MvcResult result = mockMvc
