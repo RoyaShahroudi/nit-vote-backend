@@ -23,7 +23,6 @@ public class CandidateController {
         return new ResponseEntity<>(candidateService.submit(candidate), HttpStatus.CREATED);
     }
 
-    //TODO Change to candidate group
     @GetMapping("/by-election-id/{electionId}")
     public ResponseEntity<List<CandidateDTO>> getCandidatesByElectionId(@PathVariable Integer electionId) {
         return new ResponseEntity<>(candidateService.getCandidatesByElectionId(electionId), HttpStatus.OK);
