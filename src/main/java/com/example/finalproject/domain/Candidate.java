@@ -21,4 +21,6 @@ public class Candidate {
     private Integer id;
 
     private String name;
+
+    private String info;
 }

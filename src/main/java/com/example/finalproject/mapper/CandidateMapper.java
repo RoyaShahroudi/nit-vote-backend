@@ -12,14 +12,16 @@ public class CandidateMapper {
         if (Objects.isNull(candidateDTO)) return null;
         return new Candidate()
                 .setId(candidateDTO.getId())
-                .setName(candidateDTO.getName());
+                .setName(candidateDTO.getName())
+                .setInfo(candidateDTO.getInfo());
     }
 
     public CandidateDTO toDTO(Candidate candidate) {
         if (Objects.isNull(candidate)) return null;
         return new CandidateDTO()
                 .setId(candidate.getId())
-                .setName(candidate.getName());
+                .setName(candidate.getName())
+                .setInfo(candidate.getInfo());
     }
 
 }

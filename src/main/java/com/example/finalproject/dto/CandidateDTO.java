@@ -18,4 +18,6 @@ public class CandidateDTO {
     private Integer id;
 
     private String name;
+
+    private String info;
 }
