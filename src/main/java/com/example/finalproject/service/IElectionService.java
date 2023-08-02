@@ -16,6 +16,8 @@ public interface IElectionService {
 
     ElectionResult getElectionResult(Integer electionId);
 
+    ElectionResult getElectionResultForStudent(Integer electionId);
+
     ElectionDTO newElection(ElectionDTO electionDTO);
 
     void addCandidateToElection(AddCandidateGroupRequestDTO addCandidateGroupRequestDTO);

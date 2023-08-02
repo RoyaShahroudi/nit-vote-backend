@@ -40,6 +40,11 @@ public class ElectionController {
         return new ResponseEntity<>(electionService.getElectionResult(electionId), HttpStatus.OK);
     }
 
+    @GetMapping("/student/result/{electionId}")
+    public ResponseEntity<ElectionResult> getElectionResultForStudent(@PathVariable Integer electionId) {
+        return new ResponseEntity<>(electionService.getElectionResultForStudent(electionId), HttpStatus.OK);
+    }
+
     @PostMapping("/new")
     public ResponseEntity<ElectionDTO> newElection(@RequestBody @Valid ElectionDTO electionDTO) {
         return new ResponseEntity<>(electionService.newElection(electionDTO), HttpStatus.CREATED);

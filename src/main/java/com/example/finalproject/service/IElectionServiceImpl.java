@@ -3,10 +3,7 @@ package com.example.finalproject.service;
 import com.example.finalproject.domain.CandidateGroup;
 import com.example.finalproject.domain.Election;
 import com.example.finalproject.dto.*;
-import com.example.finalproject.exceptions.messages.CandidateGroupDuplicateException;
-import com.example.finalproject.exceptions.messages.CandidateNotFoundException;
-import com.example.finalproject.exceptions.messages.ElectionNotFoundException;
-import com.example.finalproject.exceptions.messages.InvalidDateException;
+import com.example.finalproject.exceptions.messages.*;
 import com.example.finalproject.mapper.CandidateGroupMapper;
 import com.example.finalproject.mapper.CandidateMapper;
 import com.example.finalproject.mapper.ElectionMapper;
@@ -16,7 +13,6 @@ import com.example.finalproject.repository.ElectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -63,6 +59,22 @@ public class IElectionServiceImpl implements IElectionService {
 
     @Override
     public ElectionResult getElectionResult(Integer electionId) {
+        List<CandidateGroup> candidateGroups = candidateGroupRepository.findAllByElectionId(electionId);
+        return new ElectionResult().setCandidateResults(
+                candidateGroups.stream().map(candidateGroup -> {
+                    CandidateResult candidateResult = new CandidateResult();
+                    candidateResult.setCandidate(candidateMapper.toDTO(candidateGroup.getCandidate()));
+                    candidateResult.setVoteCount(candidateGroup.getVoteCount());
+                    return candidateResult;
+                }).toList());
+    }
+
+    @Override
+    public ElectionResult getElectionResultForStudent(Integer electionId) {
+        Election election = electionRepository.findById(electionId).orElseThrow(ElectionNotFoundException::new);
+        if(election.getEndDate().after(new Date())) {
+            throw new ElectionStillInProgressException();
+        }
         List<CandidateGroup> candidateGroups = candidateGroupRepository.findAllByElectionId(electionId);
         return new ElectionResult().setCandidateResults(
                 candidateGroups.stream().map(candidateGroup -> {
