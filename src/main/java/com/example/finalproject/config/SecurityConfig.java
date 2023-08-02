@@ -55,6 +55,7 @@ public class SecurityConfig {
                 .requestMatchers("/v1/election/add-candidate-to-election").hasRole("ADMIN")
                 .requestMatchers("/v1/election/all").hasRole("ADMIN")
                 .requestMatchers("/v1/election/by-student-id").hasRole("STUDENT")
+                .requestMatchers("/v1/election/result/*").hasRole("ADMIN")
                 .requestMatchers("/v1/candidate/submit").hasRole("ADMIN")
                 .dispatcherTypeMatchers( DispatcherType.ERROR ).permitAll()
                 .and()

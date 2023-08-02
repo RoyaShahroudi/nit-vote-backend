@@ -29,5 +29,5 @@ public class CandidateGroup {
     private Candidate candidate;
 
     @Column(name = "vote_count")
-    private Integer voteCount;
+    private Integer voteCount = 0;
 }

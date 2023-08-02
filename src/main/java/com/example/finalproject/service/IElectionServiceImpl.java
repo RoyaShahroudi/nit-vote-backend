@@ -64,19 +64,18 @@ public class IElectionServiceImpl implements IElectionService {
     @Override
     public ElectionResult getElectionResult(Integer electionId) {
         List<CandidateGroup> candidateGroups = candidateGroupRepository.findAllByElectionId(electionId);
-        List<CandidateResult> response = new ArrayList<>();
-        for (CandidateGroup candidateGroup : candidateGroups) {
-            CandidateResult candidateResult = new CandidateResult();
-            candidateResult.setCandidate(candidateMapper.toDTO(candidateGroup.getCandidate()));
-            candidateResult.setVoteCount(candidateGroup.getVoteCount());
-            response.add(candidateResult);
-        }
-        return new ElectionResult().setCandidateResults(response);
+        return new ElectionResult().setCandidateResults(
+                candidateGroups.stream().map(candidateGroup -> {
+                    CandidateResult candidateResult = new CandidateResult();
+                    candidateResult.setCandidate(candidateMapper.toDTO(candidateGroup.getCandidate()));
+                    candidateResult.setVoteCount(candidateGroup.getVoteCount());
+                    return candidateResult;
+                }).toList());
     }
 
     @Override
     public ElectionDTO newElection(ElectionDTO electionDTO) {
-        if(Objects.isNull(electionDTO.getStartDate()) || Objects.isNull(electionDTO.getEndDate())) {
+        if (Objects.isNull(electionDTO.getStartDate()) || Objects.isNull(electionDTO.getEndDate())) {
             throw new InvalidDateException();
         }
         return electionMapper.toDTO(electionRepository.save(electionMapper.toEntity(electionDTO)));
@@ -87,6 +86,7 @@ public class IElectionServiceImpl implements IElectionService {
         if (!candidateGroupRepository.findAllByElectionIdAndCandidateId(candidateGroupDTO.getElectionId(), candidateGroupDTO.getCandidateId()).isEmpty()) {
             throw new CandidateGroupDuplicateException();
         }
+        candidateGroupDTO.setVoteCount(0);
         candidateGroupRepository.save(new CandidateGroup()
                 .setElection(electionRepository.findById(candidateGroupDTO.getElectionId())
                         .orElseThrow(ElectionNotFoundException::new))
