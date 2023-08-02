@@ -1,10 +1,12 @@
 package com.example.finalproject.service;
 
 import com.example.finalproject.domain.CandidateGroup;
+import com.example.finalproject.domain.Election;
 import com.example.finalproject.dto.*;
 import com.example.finalproject.exceptions.messages.CandidateGroupDuplicateException;
 import com.example.finalproject.exceptions.messages.CandidateNotFoundException;
 import com.example.finalproject.exceptions.messages.ElectionNotFoundException;
+import com.example.finalproject.exceptions.messages.InvalidDateException;
 import com.example.finalproject.mapper.CandidateGroupMapper;
 import com.example.finalproject.mapper.CandidateMapper;
 import com.example.finalproject.mapper.ElectionMapper;
@@ -15,7 +17,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class IElectionServiceImpl implements IElectionService {
@@ -45,10 +49,11 @@ public class IElectionServiceImpl implements IElectionService {
     }
 
 
-    //TODO need uni database
     @Override
     public List<ElectionDTO> getElectionsByStudentId() {
-        return null;
+        List<Election> elections = electionRepository.findAll();
+        Date date = new Date();
+        return elections.stream().filter(election -> election.getStartDate().before(date) && election.getEndDate().after(date)).map(electionMapper::toDTO).toList();
     }
 
     @Override
@@ -71,8 +76,10 @@ public class IElectionServiceImpl implements IElectionService {
 
     @Override
     public ElectionDTO newElection(ElectionDTO electionDTO) {
+        if(Objects.isNull(electionDTO.getStartDate()) || Objects.isNull(electionDTO.getEndDate())) {
+            throw new InvalidDateException();
+        }
         return electionMapper.toDTO(electionRepository.save(electionMapper.toEntity(electionDTO)));
-
     }
 
     @Override
