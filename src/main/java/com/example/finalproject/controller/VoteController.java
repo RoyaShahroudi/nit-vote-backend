@@ -1,6 +1,6 @@
 package com.example.finalproject.controller;
 
-import com.example.finalproject.dto.VoteDTO;
+import com.example.finalproject.dto.VoteRequest;
 import com.example.finalproject.service.IVoteService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,8 @@ public class VoteController {
     private IVoteService voteService;
 
     @PostMapping("/submit")
-    public ResponseEntity<VoteDTO> submit(@RequestBody @Valid VoteDTO vote) {
-        return new ResponseEntity<>(voteService.submit(vote), HttpStatus.CREATED);
+    public ResponseEntity<Void> submit(@RequestBody @Valid VoteRequest vote) {
+        voteService.submit(vote);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
