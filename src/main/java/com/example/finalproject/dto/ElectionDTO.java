@@ -1,6 +1,5 @@
 package com.example.finalproject.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,7 +16,6 @@ import java.util.Date;
 @Accessors(chain = true)
 public class ElectionDTO {
 
-    @JsonIgnore
     private Integer id;
 
     @NotNull

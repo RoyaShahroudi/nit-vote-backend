@@ -1,6 +1,7 @@
 package com.example.finalproject.controller;
 
 import com.example.finalproject.dto.AddCandidateGroupRequestDTO;
+import com.example.finalproject.dto.CandidateDTO;
 import com.example.finalproject.dto.ElectionDTO;
 import com.example.finalproject.dto.ElectionResult;
 import com.example.finalproject.service.IElectionService;
@@ -54,6 +55,16 @@ public class ElectionController {
     public ResponseEntity<Void> addCandidateToElection(@RequestBody @Valid AddCandidateGroupRequestDTO candidateGroupDTO) {
         electionService.addCandidateToElection(candidateGroupDTO);
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping("/get-candidates-for-students/{electionId}")
+    public ResponseEntity<List<CandidateDTO>> getCandidatesForStudent(@PathVariable Integer electionId) {
+        return new ResponseEntity<>(electionService.getCandidatesForStudent(electionId), HttpStatus.OK);
+    }
+
+    @GetMapping("/in-progress")
+    public ResponseEntity<List<ElectionDTO>> getInProgressElections() {
+        return new ResponseEntity<>(electionService.getInProgressElections(), HttpStatus.OK);
     }
 
 }

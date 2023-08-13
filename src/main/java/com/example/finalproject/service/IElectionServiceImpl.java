@@ -72,7 +72,7 @@ public class IElectionServiceImpl implements IElectionService {
     @Override
     public ElectionResult getElectionResultForStudent(Integer electionId) {
         Election election = electionRepository.findById(electionId).orElseThrow(ElectionNotFoundException::new);
-        if(election.getEndDate().after(new Date())) {
+        if (election.getEndDate().after(new Date())) {
             throw new ElectionStillInProgressException();
         }
         List<CandidateGroup> candidateGroups = candidateGroupRepository.findAllByElectionId(electionId);
@@ -95,7 +95,7 @@ public class IElectionServiceImpl implements IElectionService {
 
     @Override
     public void addCandidateToElection(AddCandidateGroupRequestDTO candidateGroupDTO) {
-        if (!candidateGroupRepository.findAllByElectionIdAndCandidateId(candidateGroupDTO.getElectionId(), candidateGroupDTO.getCandidateId()).isEmpty()) {
+        if (candidateGroupRepository.findByElectionIdAndCandidateId(candidateGroupDTO.getElectionId(), candidateGroupDTO.getCandidateId()).isPresent()) {
             throw new CandidateGroupDuplicateException();
         }
         candidateGroupDTO.setVoteCount(0);
@@ -104,5 +104,22 @@ public class IElectionServiceImpl implements IElectionService {
                         .orElseThrow(ElectionNotFoundException::new))
                 .setCandidate(candidateRepository.findById(candidateGroupDTO.getCandidateId())
                         .orElseThrow(CandidateNotFoundException::new)));
+    }
+
+    @Override
+    public List<CandidateDTO> getCandidatesForStudent(Integer electionId) {
+        Election election = electionRepository.findById(electionId).orElseThrow(ElectionNotFoundException::new);
+        if (election.getEndDate().before(new Date()) || election.getStartDate().after(new Date())) {
+            throw new ElectionIsNotActiveException();
+        }
+        return candidateGroupRepository.findAllByElectionId(election.getId()).stream()
+                .map(candidateGroup -> candidateMapper.toDTO(candidateGroup.getCandidate())).toList();
+    }
+
+    @Override
+    public List<ElectionDTO> getInProgressElections() {
+        return electionRepository.findAll().stream().map(election -> electionMapper.toDTO(election))
+                .filter(electionDTO -> !electionDTO.getEndDate().before(new Date()) && !electionDTO.getStartDate().after(new Date()))
+                .toList();
     }
 }
