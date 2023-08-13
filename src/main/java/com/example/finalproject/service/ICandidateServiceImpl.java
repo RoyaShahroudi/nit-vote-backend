@@ -2,7 +2,6 @@ package com.example.finalproject.service;
 
 import com.example.finalproject.domain.CandidateGroup;
 import com.example.finalproject.dto.CandidateDTO;
-import com.example.finalproject.mapper.CandidateGroupMapper;
 import com.example.finalproject.mapper.CandidateMapper;
 import com.example.finalproject.repository.CandidateGroupRepository;
 import com.example.finalproject.repository.CandidateRepository;
@@ -23,9 +22,6 @@ public class ICandidateServiceImpl implements ICandidateService {
     @Autowired
     private CandidateGroupRepository candidateGroupRepository;
 
-    @Autowired
-    private CandidateGroupMapper candidateGroupMapper;
-
     @Override
     public CandidateDTO submit(CandidateDTO candidateDTO) {
         return candidateMapper.toDTO(candidateRepository.save(candidateMapper.toEntity(candidateDTO)));
@@ -37,5 +33,10 @@ public class ICandidateServiceImpl implements ICandidateService {
         return candidateGroups
                 .stream()
                 .map(candidateGroup -> candidateMapper.toDTO(candidateGroup.getCandidate())).toList();
+    }
+
+    @Override
+    public List<CandidateDTO> findAll() {
+        return candidateRepository.findAll().stream().map(candidateMapper::toDTO).toList();
     }
 }

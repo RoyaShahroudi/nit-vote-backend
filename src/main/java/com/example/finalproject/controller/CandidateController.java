@@ -27,4 +27,9 @@ public class CandidateController {
     public ResponseEntity<List<CandidateDTO>> getCandidatesByElectionId(@PathVariable Integer electionId) {
         return new ResponseEntity<>(candidateService.getCandidatesByElectionId(electionId), HttpStatus.OK);
     }
+
+    @GetMapping("/get-all")
+    public ResponseEntity<List<CandidateDTO>> getAll() {
+        return new ResponseEntity<>(candidateService.findAll(), HttpStatus.OK);
+    }
 }

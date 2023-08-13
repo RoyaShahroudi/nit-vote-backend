@@ -5,11 +5,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Repository
 public interface CandidateGroupRepository extends JpaRepository<CandidateGroup, Integer> {
     List<CandidateGroup> findAllByElectionId(int electionId);
 
-    List<CandidateGroup> findAllByElectionIdAndCandidateId(int electionId, int candidateId);
+    Optional<CandidateGroup> findByElectionIdAndCandidateId(int electionId, int candidateId);
+
+
 }

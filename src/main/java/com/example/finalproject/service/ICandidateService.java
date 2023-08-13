@@ -9,5 +9,7 @@ public interface ICandidateService {
     CandidateDTO submit(CandidateDTO candidateDTO);
 
     List<CandidateDTO> getCandidatesByElectionId(int electionId);
+
+    List<CandidateDTO> findAll();
 }
 
