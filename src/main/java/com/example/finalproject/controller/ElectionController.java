@@ -67,4 +67,9 @@ public class ElectionController {
         return new ResponseEntity<>(electionService.getInProgressElections(), HttpStatus.OK);
     }
 
+    @GetMapping("/get-elections-history-for-student")
+    public ResponseEntity<List<ElectionDTO>> getElectionsHistoryForStudent() {
+        return new ResponseEntity<>(electionService.getElectionsHistoryForStudent(), HttpStatus.OK);
+    }
+
 }
