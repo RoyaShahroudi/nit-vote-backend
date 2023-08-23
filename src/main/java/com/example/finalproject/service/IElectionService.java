@@ -27,5 +27,7 @@ public interface IElectionService {
 
     List<ElectionDTO> getInProgressElections();
 
+    List<ElectionDTO> getElectionsHistoryForStudent();
+
 }
 

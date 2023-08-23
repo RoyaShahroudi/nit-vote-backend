@@ -2,15 +2,15 @@ package com.example.finalproject.service;
 
 import com.example.finalproject.domain.CandidateGroup;
 import com.example.finalproject.domain.Election;
+import com.example.finalproject.domain.Student;
 import com.example.finalproject.dto.*;
 import com.example.finalproject.exceptions.messages.*;
 import com.example.finalproject.mapper.CandidateGroupMapper;
 import com.example.finalproject.mapper.CandidateMapper;
 import com.example.finalproject.mapper.ElectionMapper;
-import com.example.finalproject.repository.CandidateGroupRepository;
-import com.example.finalproject.repository.CandidateRepository;
-import com.example.finalproject.repository.ElectionRepository;
+import com.example.finalproject.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -30,20 +30,21 @@ public class IElectionServiceImpl implements IElectionService {
     private CandidateMapper candidateMapper;
 
     @Autowired
-    private CandidateGroupMapper candidateGroupMapper;
-
-    @Autowired
     private CandidateGroupRepository candidateGroupRepository;
 
     @Autowired
     private CandidateRepository candidateRepository;
 
+    @Autowired
+    private VoteRepository voteRepository;
+
+    @Autowired
+    private StudentRepository studentRepository;
+
     @Override
     public ElectionDTO getElection(Integer electionId) {
-        //TODO throw exception
-        return electionMapper.toDTO(electionRepository.findById(electionId).orElse(null));
+        return electionMapper.toDTO(electionRepository.findById(electionId).orElseThrow(ElectionNotFoundException::new));
     }
-
 
     @Override
     public List<ElectionDTO> getElectionsByStudentId() {
@@ -87,7 +88,9 @@ public class IElectionServiceImpl implements IElectionService {
 
     @Override
     public ElectionDTO newElection(ElectionDTO electionDTO) {
-        if (Objects.isNull(electionDTO.getStartDate()) || Objects.isNull(electionDTO.getEndDate())) {
+        if (Objects.isNull(electionDTO.getStartDate()) || Objects.isNull(electionDTO.getEndDate())
+                || electionDTO.getStartDate().after(electionDTO.getEndDate())
+        ) {
             throw new InvalidDateException();
         }
         return electionMapper.toDTO(electionRepository.save(electionMapper.toEntity(electionDTO)));
@@ -121,5 +124,14 @@ public class IElectionServiceImpl implements IElectionService {
         return electionRepository.findAll().stream().map(election -> electionMapper.toDTO(election))
                 .filter(electionDTO -> !electionDTO.getEndDate().before(new Date()) && !electionDTO.getStartDate().after(new Date()))
                 .toList();
+    }
+
+    @Override
+    public List<ElectionDTO> getElectionsHistoryForStudent() {
+        Student student = studentRepository.findByStudentNumber(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())
+                .orElseThrow(StudentNotFoundException::new);
+        return voteRepository.findAllByStudentId(student.getId())
+                .stream().map(vote -> electionRepository.findById(vote.getElectionId()).orElseThrow(ElectionNotFoundException::new))
+                .map(electionMapper::toDTO).toList();
     }
 }
