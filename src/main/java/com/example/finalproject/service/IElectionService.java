@@ -11,6 +11,8 @@ public interface IElectionService {
 
     ElectionDTO getElection(Integer electionId);
 
+    ElectionDTO getElectionForStudent(Integer electionId);
+
     List<ElectionDTO> getElectionsByStudentId();
 
     List<ElectionDTO> getElections();

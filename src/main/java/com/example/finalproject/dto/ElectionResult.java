@@ -16,4 +16,6 @@ import java.util.List;
 public class ElectionResult {
 
     List<CandidateResult> candidateResults;
+
+    String electionName;
 }

@@ -78,6 +78,8 @@ public class SecurityConfig {
                 .requestMatchers("/v1/election/get-candidates-for-students/*").hasRole("STUDENT")
                 .requestMatchers("/v1/election/get-elections-history-for-student").hasRole("STUDENT")
                 .requestMatchers("/v1/election/in-progress").hasRole("ADMIN")
+                .requestMatchers("/v1/election/*").hasRole("ADMIN")
+                .requestMatchers("/v1/election/student/*").hasRole("STUDENT")
                 .requestMatchers("/v1/candidate/submit").hasRole("ADMIN")
                 .requestMatchers("/v1/candidate/by-election-id/*").hasRole("ADMIN")
                 .requestMatchers("/v1/candidate/get-all").hasRole("ADMIN")

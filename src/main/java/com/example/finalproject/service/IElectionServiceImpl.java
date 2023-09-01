@@ -3,6 +3,7 @@ package com.example.finalproject.service;
 import com.example.finalproject.domain.CandidateGroup;
 import com.example.finalproject.domain.Election;
 import com.example.finalproject.domain.Student;
+import com.example.finalproject.domain.Vote;
 import com.example.finalproject.dto.*;
 import com.example.finalproject.exceptions.messages.*;
 import com.example.finalproject.mapper.CandidateGroupMapper;
@@ -46,11 +47,29 @@ public class IElectionServiceImpl implements IElectionService {
         return electionMapper.toDTO(electionRepository.findById(electionId).orElseThrow(ElectionNotFoundException::new));
     }
 
+
+    @Override
+    public ElectionDTO getElectionForStudent(Integer electionId) {
+        ElectionDTO electionDTO = electionMapper.toDTO(electionRepository.findById(electionId).orElseThrow(ElectionNotFoundException::new));
+        Date date = new Date();
+        if (electionDTO.getStartDate().before(date) && electionDTO.getEndDate().after(date)) {
+            return electionDTO;
+        }
+        throw new ElectionStillInProgressException();
+    }
+
     @Override
     public List<ElectionDTO> getElectionsByStudentId() {
         List<Election> elections = electionRepository.findAll();
         Date date = new Date();
-        return elections.stream().filter(election -> election.getStartDate().before(date) && election.getEndDate().after(date)).map(electionMapper::toDTO).toList();
+        Student student = studentRepository.findByStudentNumber(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString())
+                .orElseThrow(StudentNotFoundException::new);
+        List<Integer> studentElections = voteRepository.findAllByStudentId(student.getId())
+                .stream().map(vote -> electionRepository.findById(vote.getElectionId()).orElseThrow(ElectionNotFoundException::new))
+                .map(Election::getId)
+                .toList();
+        List<Election> unContestedElections = elections.stream().filter(election -> !studentElections.contains(election.getId())).toList();
+        return unContestedElections.stream().filter(election -> election.getStartDate().before(date) && election.getEndDate().after(date)).map(electionMapper::toDTO).toList();
     }
 
     @Override
@@ -60,6 +79,7 @@ public class IElectionServiceImpl implements IElectionService {
 
     @Override
     public ElectionResult getElectionResult(Integer electionId) {
+        Election election = electionRepository.findById(electionId).orElseThrow(ElectionNotFoundException::new);
         List<CandidateGroup> candidateGroups = candidateGroupRepository.findAllByElectionId(electionId);
         return new ElectionResult().setCandidateResults(
                 candidateGroups.stream().map(candidateGroup -> {
@@ -67,7 +87,7 @@ public class IElectionServiceImpl implements IElectionService {
                     candidateResult.setCandidate(candidateMapper.toDTO(candidateGroup.getCandidate()));
                     candidateResult.setVoteCount(candidateGroup.getVoteCount());
                     return candidateResult;
-                }).toList());
+                }).toList()).setElectionName(election.getName());
     }
 
     @Override
@@ -83,7 +103,7 @@ public class IElectionServiceImpl implements IElectionService {
                     candidateResult.setCandidate(candidateMapper.toDTO(candidateGroup.getCandidate()));
                     candidateResult.setVoteCount(candidateGroup.getVoteCount());
                     return candidateResult;
-                }).toList());
+                }).toList()).setElectionName(election.getName());
     }
 
     @Override

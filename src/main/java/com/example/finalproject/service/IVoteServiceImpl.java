@@ -38,9 +38,9 @@ public class IVoteServiceImpl implements IVoteService {
         if (voteRepository.findByStudentIdAndElectionId(student.getId(), vote.getElectionId()).isPresent()) {
             throw new StudentAlreadyVotedException();
         }
-        voteRepository.save(new Vote().setElectionId(vote.getElectionId()).setStudentId(student.getId()));
         CandidateGroup candidateGroup = candidateGroupRepository.findByElectionIdAndCandidateId(vote.getElectionId(), vote.getCandidateId()).orElseThrow(CandidateNotFoundException::new);
         candidateGroup.setVoteCount(candidateGroup.getVoteCount() + 1);
+        voteRepository.save(new Vote().setElectionId(vote.getElectionId()).setStudentId(student.getId()));
         candidateGroupRepository.save(candidateGroup);
     }
 }
