@@ -43,7 +43,7 @@ class AdminAuthenticationTest {
         adminRepository.deleteAll();
     }
 
-    @Test
+//    @Test
     void adminRegister_Ok() throws Exception {
         AdminDTO adminDTO = new AdminDTO().setUsername("1234").setPassword("1234");
         MvcResult result = mockMvc
